@@ -6,6 +6,8 @@
 
 ## 问题
 
+中兴 F50 的以太网网络共享侧是 `br0` 网桥，不是普通 Android 以太网共享常见的 tether 接口 `eth0`。VPN Hotspot 能识别 VPN 上游为 `tun0`，但系统策略路由里 `main` 表的优先级更高。
+
 观察到的策略路由顺序：
 
 ```sh
@@ -23,14 +25,16 @@
 
 ## 修复
 
-`tun0` 存在且 `table tun0` 有路由时：
+本模块不修改 iptables，只补一条 iproute2 策略路由规则。
+
+`tun0` 存在且 `table tun0` 有路由时，执行以下 iproute2 命令：
 
 ```sh
 ip rule add pref 9000 lookup tun0
 ip route flush cache
 ```
 
-`tun0` 消失时：
+`tun0` 消失时，执行以下 iproute2 命令：
 
 ```sh
 ip rule del pref 9000 lookup tun0
