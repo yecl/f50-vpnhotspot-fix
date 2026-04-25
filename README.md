@@ -27,18 +27,20 @@ F50内置的策略路由顺序：
 
 ## 修复
 
-本模块不修改 iptables，只补一条 iproute2 策略路由规则。
+本模块不直接修改 iptables。VPN Hotspot 仍负责转发、ACL、NAT 和 DNS 规则，本模块只负责自动启动 VPN Hotspot 的 `br0` 非监视共享，并补一条 iproute2 策略路由规则。
 
-`tun0` 存在且 `table tun0` 有路由时，执行以下 iproute2 命令：
+`tun0` 存在且 `table tun0` 有路由时：
 
 ```sh
+am start-foreground-service -n be.mygod.vpnhotspot/.TetheringService --esa interface.add br0
 ip rule add pref 9000 lookup tun0
 ip route flush cache
 ```
 
-`tun0` 消失时，执行以下 iproute2 命令：
+`tun0` 消失时：
 
 ```sh
+am start-foreground-service -n be.mygod.vpnhotspot/.TetheringService --es interface.remove br0
 ip rule del pref 9000 lookup tun0
 ip route flush cache
 ```

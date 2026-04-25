@@ -1,6 +1,6 @@
 id=vpn_tun0_rule_fix
 name=VPN Tun0 Rule Fix
-version=v1.0.1
-versionCode=2
+version=v1.0.2
+versionCode=3
 author=yecl
 description=Prefer the tun0 routing table for split VPN destinations on Android hotspot devices.
