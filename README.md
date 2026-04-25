@@ -1,14 +1,16 @@
-# ZTE F50 VPN Tun0 Rule Fix
+# ZTE F50 VPN Hotspot Route Fix Magisk Module
 
-用于中兴 F50 + [VPN Hotspot](https://github.com/mygod/vpnhotspot) 的 Magisk 模块。
+修复中兴 F50 安装 [VPN Hotspot](https://github.com/mygod/vpnhotspot) 使用以太网网络共享不生效的问题。
 
-仅在中兴 F50 上测试。
+## 依赖
+
+使用[UFI-TOOLS](https://github.com/kanoqwq/UFI-TOOLS) root 中兴F50，并安装其自带的Magisk App 1e3edb88 (28103)
 
 ## 问题
 
 中兴 F50 的以太网网络共享侧是 `br0` 网桥，不是普通 Android 以太网共享常见的 tether 接口 `eth0`。VPN Hotspot 能识别 VPN 上游为 `tun0`，但系统策略路由里 `main` 表的优先级更高。
 
-观察到的策略路由顺序：
+F50内置的策略路由顺序：
 
 ```sh
 9999:  from all lookup main
@@ -18,7 +20,7 @@
 `main` 中存在：
 
 ```sh
-<蜂窝侧私网网段> dev sipa_eth0
+<VPN内网网段> dev sipa_eth0
 ```
 
 部分 VPN 目标会先命中 `main`，从 `sipa_eth0` 出去。
